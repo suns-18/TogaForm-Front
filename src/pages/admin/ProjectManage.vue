@@ -125,7 +125,7 @@ initComponent()
                                     </v-col>
                                     <v-col class="align-center">
                                         <v-container>
-                                            <v-switch label="显示已过期的问卷"
+                                            <v-switch label="显示已过期"
                                                       class="align-center"
                                                       color="info"
                                                       density="compact"

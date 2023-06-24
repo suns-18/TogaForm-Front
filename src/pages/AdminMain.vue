@@ -3,6 +3,7 @@ import {ref} from "vue";
 import {useUserStore} from "../ts/store/user-store.ts";
 import pinia from "../ts/store.ts";
 import naviMenu from "../ts/navi-menu.ts";
+import {roleStr} from "../ts/model-util.ts";
 
 // UserInfo
 const userStore = useUserStore(pinia)
@@ -26,6 +27,7 @@ function itemVisible(itemRole: number, userRole: number) {
                     <v-list-item-title class="title text-center">
                             <img src="/img/Logo.svg" alt="Logo" width="128" height="64"/>
 	                    <p class="font-weight-bold">在线问卷调查系统</p>
+	                    <p>后台管理</p>
                     </v-list-item-title>
                 </v-list-item>
                 <v-divider></v-divider>
@@ -34,7 +36,9 @@ function itemVisible(itemRole: number, userRole: number) {
                     <v-list-item-title class="title text-center">
                         <span class="font-weight-bold">{{ userStore.user.username }}</span>
                     </v-list-item-title>
-                    <v-list-item-subtitle class="text-center">[用户权限]</v-list-item-subtitle>
+                    <v-list-item-subtitle class="text-center">
+                        {{ roleStr(userStore.user.role) }}
+                    </v-list-item-subtitle>
                 </v-list-item>
                 <v-divider></v-divider>
 

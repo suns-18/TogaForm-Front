@@ -5,7 +5,7 @@
 <template>
     <v-container>
         <v-card>
-            <v-card-title class="text-h5">问卷列表</v-card-title>
+            <v-card-title class="text-h5 text-center">问卷列表</v-card-title>
             <v-card-text>
                 <v-table v-if="false"></v-table>
                 <v-container class="text-center" v-else>

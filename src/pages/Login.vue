@@ -22,12 +22,13 @@ const msgProp = reactive<MsgProp>({color: "", content: "", show: false})
 
 const userStore = useUserStore(pinia)
 const doLogin = async () => {
-    let res = await axios.post('/user/login',{
+
+    let res = await axios.post('/user/login', {
         username: userName.value,
         password: password.value //需要加密！！！
     })
 
-    if(res.data["code"]=="0"){
+    if (res.data["code"] == "0") {
         errMsg(msgProp, res.data["message"])
         return
     }
@@ -35,7 +36,18 @@ const doLogin = async () => {
     userStore.user = res.data.data
     userStore.isLogin = true
 
-    await router.push("/")
+    switch (userStore.user.role) {
+        case 0:
+            await router.push("/admin")
+            break
+        case 1:
+        case 2:
+            await router.push("/home")
+            break
+        default:
+            alert("请求非法");
+    }
+
 }
 </script>
 

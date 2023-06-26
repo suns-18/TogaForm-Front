@@ -1,11 +1,11 @@
 <script setup lang="ts">
 
-import {PAGE_LIMIT,UserList} from "../ts/model.ts";
-import {localTime , roleColor, roleStr} from "../ts/model-util.ts";
+import {PAGE_LIMIT, User, UserList} from "../ts/model.ts";
+import {localTime, roleColor, roleStr} from "../ts/model-util.ts";
 import axios from "../ts/axios.ts"
 import {reactive, ref} from "vue";
 import {errMsg, MsgProp, TIMEOUT} from "../ts/snacker-alert.ts";
-import router from "../ts/router.ts";
+import {getUserById} from "../ts/model-api.ts";
 
 // ComponentProp
 const props = defineProps(['status'])
@@ -13,20 +13,23 @@ const props = defineProps(['status'])
 // List
 const viewList = ref<UserList>({currentPage: 0, data: [], totalPage: 0})
 const emptyStr = ref("找不到符合条件的用户")
-
+const keyword = ref("")
 
 // Message
 const msgProp = reactive<MsgProp>({color: "", content: "", show: false})
 
 // Dialog
 const diaDetailShow = ref(false)
+const modelDetail = ref<User>()
+const modelDetailCreatedBy = ref()
 
 const getList = async (page: number = 1) => {
     try {
         let res = await axios.post(`/user/queryList`, {
             start: (page - 1) * 10,
             limit: PAGE_LIMIT,
-            status: props.status
+            status: props.status,
+            username: keyword.value ? keyword.value : ''
         })
 
         if (res.data["code"] == 0) {
@@ -47,8 +50,13 @@ const initComponent = async () => {
     await getList()
 }
 
-const showDetail = async () => {
+const showDetail = async (item: User) => {
     diaDetailShow.value = true
+    modelDetail.value = item
+
+    let creator = await
+        getUserById(item.createdBy)
+    modelDetailCreatedBy.value = creator.username
 }
 
 initComponent()
@@ -63,7 +71,7 @@ initComponent()
                     <v-col cols="2" class="text-center align-center mt-2">
                         <v-label class="text-center align-center">搜索用户：</v-label>
                     </v-col>
-                    <v-col class="ma-2 pa-0">
+                    <v-col class="ma-2 pa-0" v-if="0">
                         <v-select
                                 density="compact"
                                 variant="outlined"
@@ -74,14 +82,19 @@ initComponent()
                         <v-text-field
                                 variant="underlined"
                                 density="compact"
-                                label="关键词"
+                                label="用户名"
+                                v-model="keyword"
+                                @click:append-inner="getList()"
+                                clearable="clearable"
                                 append-inner-icon="mdi-magnify"></v-text-field>
                     </v-col>
                     <v-col class="pa-1">
                         <v-spacer></v-spacer>
                     </v-col>
-                    <v-col class="pa-1">
-                        <v-btn class="bg-success ma-1" block @click="viewInsert">添加用户...</v-btn>
+                    <v-col class="align-center pr-2">
+                        <v-btn class="bg-success align-center pr-2" block
+                               @click="viewInsert">添加用户...
+                        </v-btn>
                     </v-col>
                 </v-row>
                 <v-container v-if="viewList.data.length>0">
@@ -98,15 +111,22 @@ initComponent()
                         </thead>
                         <tbody class="text-center">
                         <tr v-for="(item, index) in viewList.data" :key="item.id">
-                            <td>{{ index + 1 + (viewList.currentPage - 1) * PAGE_LIMIT }}</td>
+                            <td>{{
+                                index + 1 + (viewList.currentPage - 1)
+                                * PAGE_LIMIT
+                                }}
+                            </td>
                             <td>{{ item.username }}</td>
                             <td>{{ localTime(item.startTime) }}</td>
                             <td>{{ localTime(item.stopTime) }}</td>
-                            <td><v-chip :color="roleColor(item.role)">
-                                {{ roleStr(item.role) }}</v-chip></td>
+                            <td>
+                                <v-chip :color="roleColor(item.role)">
+                                    {{ roleStr(item.role) }}
+                                </v-chip>
+                            </td>
                             <td>
                                 <v-btn-group>
-                                    <v-btn @click="showDetail">查看详情</v-btn>
+                                    <v-btn @click="showDetail(item)">查看详情</v-btn>
                                     <v-btn @click="">编辑</v-btn>
                                     <v-btn @click="">关闭</v-btn>
                                     <v-btn @click="">删除</v-btn>
@@ -121,7 +141,8 @@ initComponent()
                                       :total-visible="7"
                                       class="align-center"
                                       v-model="viewList.currentPage"
-                                      @update:model-value="getList(viewList.currentPage)"
+                                      @update:model-value=
+                                          "getList(viewList.currentPage)"
                         >
                         </v-pagination>
                     </v-container>
@@ -135,14 +156,46 @@ initComponent()
         </v-card>
     </v-container>
 
-    <v-dialog v-model="diaDetailShow" max-width="50%">
+    <v-dialog v-model="diaDetailShow" max-width="30%">
         <v-card>
             <v-container>
                 <h1>用户详情</h1>
+                <v-table density="compact">
+                    <tbody>
+                    <tr>
+                        <td>用户名</td>
+                        <td>{{ modelDetail.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>用户权限</td>
+                        <td>
+                            <v-chip
+                                    :color="roleColor(modelDetail.role)">
+                                {{ roleStr(modelDetail.role) }}
+                            </v-chip>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>启用时间</td>
+                        <td>{{ localTime(modelDetail.startTime) }}</td>
+                    </tr>
+                    <tr>
+                        <td>停用时间</td>
+                        <td>{{ localTime(modelDetail.stopTime) }}</td>
+                    </tr>
+                    <tr>
+                        <td>创建人</td>
+                        <td>{{ modelDetailCreatedBy }}</td>
+                    </tr>
 
+                    </tbody>
+                </v-table>
             </v-container>
             <v-card-actions>
-                <v-btn block class="bg-red-accent-3" @click="diaDetailShow=false">关闭</v-btn>
+                <v-btn block class="bg-red-accent-3"
+                       @click="diaDetailShow=false">
+                    关闭
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

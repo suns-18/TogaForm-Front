@@ -26,7 +26,7 @@ const questionList = ref([
         id: "2",
         title: '这也是问题',
         isRequired: false,
-        questionType: 1,
+        questionType: 2,
         selections: [
             {
                 id: 'A',
@@ -50,20 +50,17 @@ const questionList = ref([
     }
 ])
 
-const answers = ref<[{}]>(
-    [{
-        question: "3",
-        answers: [{
-            key: "0",
-            value: ""
-        },{
-            key: "1",
-            value: ""
-        },{
-            key: "2",
-            value: ""
-        }]
-    }]
+const answers = ref(
+    [
+        {
+            question: "3",
+            answers: ""
+        },
+        {
+            question: "2",
+            answers: []
+        },
+    ]
 )
 
 const quesnaireInfo = ref({
@@ -100,7 +97,7 @@ initComponent()
                                 <v-radio :label="s.title"
                                          :value="s.id"
                                          class="pr-3 mr-3"
-                                         color="secondary"
+                                         color="info"
                                 >
                                 </v-radio>
                             </template>
@@ -109,19 +106,24 @@ initComponent()
 
                     <!-- 2. MultiSelection -->
                     <v-container v-if="item.questionType==2">
-                            <template v-for="s in item.selections">
-                                <v-checkbox :label="s.title"
-                                         :value="s.id"
-                                         class="pr-3 mr-3"
-                                         color="secondary"
-                                >
-                                </v-checkbox>
-                            </template>
+                        <template v-for="s in item.selections">
+                            <v-checkbox :label="s.title"
+                                        :value="s.id"
+                                        class="pr-3 mr-3"
+                                        color="info"
+                            >
+                            </v-checkbox>
+                        </template>
                     </v-container>
 
                     <!-- 3. Rich-text -->
                     <v-container v-if="item.questionType==3">
-                        <v-textarea></v-textarea>
+                        <v-textarea
+                                no-resize
+                                density="compact"
+                                variant="outlined"
+                        >
+                        </v-textarea>
                     </v-container>
                 </v-container>
             </template>

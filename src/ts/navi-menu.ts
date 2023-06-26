@@ -20,6 +20,22 @@ export default [
         icon: 'mdi mdi-account-check-outline',
         path: '/manage/project',
     }, {
+        title: '模板管理',
+        icon: 'mdi mdi-account-check-outline',
+        path: '/manage/template',
+    }, {
+        title: '问卷管理',
+        icon: 'mdi mdi-account-check-outline',
+        subItems: [{
+            title: '项目问卷',
+            icon: 'mdi mdi-account-check-outline',
+            path: '/manage/project/quesnaireList',
+        }, {
+            title: '问卷统计',
+            icon: 'mdi mdi-account-check-outline',
+            path: '/manage/project/quesnaireStatistics'
+        }]
+    },{
         title: '个人信息',
         icon: 'mdi mdi-account',
         path: '/personalInfo'

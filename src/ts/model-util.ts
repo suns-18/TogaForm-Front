@@ -72,3 +72,23 @@ export function expireColor(start: string,
     if (expire(start)) return "success"
     else return "warning"
 }
+
+export function randomColor() {
+    return `card-${Math.ceil(Math.random() * 4)}`
+}
+
+export function questionTypeColor(type: number) {
+    switch (type) {
+        case 1: return "success"
+        case 2: return "green-accent-4"
+        case 3: return "purple-accent-4"
+    }
+}
+
+export function questionTypeStr(type: number) {
+    switch (type) {
+        case 1: return "单选"
+        case 2: return "多选"
+        case 3: return "填空"
+    }
+}

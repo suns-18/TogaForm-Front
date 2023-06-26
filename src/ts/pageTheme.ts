@@ -12,6 +12,10 @@ const pageTheme: ThemeDefinition = {
         info: '#2196F3',
         success: '#4CAF50',
         warning: '#FB8C00',
+        'card-1':'#e1dbe9',
+        'card-2':'#ffdaa9',
+        'card-3':'#c3ddff',
+        'card-4':'#c3e5b5',
     }
 }
 

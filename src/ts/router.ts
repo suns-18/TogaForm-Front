@@ -29,6 +29,12 @@ const routes = [
             meta: {
                 title: '项目管理 - TogaForm'
             }
+        }, {
+            path: '/manage/template',
+            component: () => import('../pages/admin/TemplateManage.vue'),
+            meta: {
+                title: '模板管理 - TogaForm'
+            }
         }]
     }, {
         path: '/login',
@@ -48,11 +54,17 @@ const routes = [
         children: [{
             path: '/quesnaire/:quesnaire_id',
             component: () => import('../pages/quesnaire/TemplatePage.vue'),
-        },{
+        }, {
             path: '/home',
             component: () => import('../pages/quesnaire/Home.vue'),
             meta: {
                 title: '主页 - TogaForm在线问卷系统'
+            }
+        }, {
+            path: '/quesnaire/finished',
+            component: () => import('../pages/quesnaire/Finished.vue'),
+            meta: {
+                title: '完成作答 - TogaForm在线问卷系统'
             }
         }]
     }

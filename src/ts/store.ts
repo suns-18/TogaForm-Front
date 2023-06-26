@@ -8,3 +8,4 @@ pinia.use(piniaPluginPersist)
 export default pinia
 
 export * from './store/user-store'
+export * from './store/project-store.ts'

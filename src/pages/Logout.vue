@@ -8,7 +8,7 @@ const userStore = useUserStore(pinia)
 const initComponent = async () => {
     try {
         let res = await axios.post(`/user/logout/`)
-    } finally {
+    }finally {
         userStore.user = {}
         userStore.isLogin = false
         await router.push('/login')
